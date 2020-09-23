@@ -4,6 +4,32 @@
   </div>
 </template>
 
+<script lang="ts">
+import Vue from 'vue'
+import { AuthUser } from '@/store/auth'
+
+export default Vue.extend({
+  computed: {
+    authUser (): AuthUser {
+      return this.$store.getters['auth/user']
+    }
+  },
+  watch: {
+    authUser (authUser: AuthUser) {
+      if (authUser !== undefined) {
+        this.$store.dispatch('finishLoading')
+      }
+    }
+  },
+  beforeMount () {
+    if (this.authUser === undefined) {
+      this.$store.dispatch('startLoading')
+      this.$store.dispatch('auth/init')
+    }
+  }
+})
+</script>
+
 <style>
 html {
   font-family:
